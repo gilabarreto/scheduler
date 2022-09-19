@@ -1,29 +1,51 @@
 import React from "react";
-import { useState } from "react";
+import axios from "axios";
+
+import { useState, useEffect } from "react";
+
 import "components/Application.scss";
+import "components/Appointment/styles.scss";
+
 import DayList from "./DayList";
+import Appointment from "./Appointment";
+import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 
 export default function Application(props) {
 
-  const days = [
-    {
-      id: 1,
-      name: "Monday",
-      spots: 2,
-    },
-    {
-      id: 2,
-      name: "Tuesday",
-      spots: 5,
-    },
-    {
-      id: 3,
-      name: "Wednesday",
-      spots: 0,
-    },
-  ];
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {}
+  });
 
-  const [day, setDay] = useState("Monday");
+  useEffect(() => {
+    Promise.all([
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('api/interviewers')
+    ]).then((all) => {
+      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
+    });
+  }, [])
+
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+
+  const setDay = day => setState({ ...state, day });
+  // const setDays = days => setState({ ...state, days });
+
+  const schedule = dailyAppointments.map((appointment) => {
+
+    const interview = getInterview(state, appointment.interview);
+
+    return (
+      <Appointment
+        key={appointment.id}
+        {...appointment}
+        interview={interview}
+      />)
+  });
 
   return (
     <main className="layout">
@@ -36,8 +58,8 @@ export default function Application(props) {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList
-            days={days}
-            value={day}
+            days={state.days}
+            value={state.day}
             onChange={setDay}
           />
         </nav>
@@ -48,7 +70,8 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
+        {schedule}
+        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
