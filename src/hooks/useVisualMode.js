@@ -3,9 +3,27 @@ import { useState } from "react";
 export default function useVisualMode(initial) {
 
   const [mode, setMode] = useState(initial);
+  const [history, setHistory] = useState([initial]);
 
-  const transition = setMode
+  const transition = (newMode, replace) => {
 
-  return { mode, transition };
+    setMode(newMode)
+    setHistory([...history, newMode])
+
+    if (replace === true) {
+      setHistory([...history])
+    }
+  };
+
+  const back = () => {
+    if (history.length >= 2) {
+      let historyCopy = [...history]
+      historyCopy.pop()
+      setHistory(historyCopy)
+      setMode(historyCopy[historyCopy.length - 1])
+    }
+  };
+
+  return { mode, transition, back };
 
 }
