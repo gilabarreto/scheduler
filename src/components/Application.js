@@ -8,7 +8,7 @@ import "components/Appointment/styles.scss";
 
 import DayList from "./DayList";
 import Appointment from "./Appointment";
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 export default function Application(props) {
 
@@ -29,21 +29,41 @@ export default function Application(props) {
     });
   }, [])
 
-
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-
   const setDay = day => setState({ ...state, day });
   // const setDays = days => setState({ ...state, days });
+
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    setState({...state, appointments});
+
+  }
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
 
   const schedule = dailyAppointments.map((appointment) => {
 
     const interview = getInterview(state, appointment.interview);
+    const interviewers = dailyInterviewers.map((interviewer) => { return { ...interviewer } });
 
     return (
       <Appointment
         key={appointment.id}
         {...appointment}
+        interviewers={interviewers}
         interview={interview}
+        bookInterview={bookInterview}
       />)
   });
 
