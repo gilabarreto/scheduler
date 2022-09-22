@@ -13,6 +13,7 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
+  const DELETE = "DELETE"
 
   const { time, interview, interviewers } = props;
 
@@ -31,24 +32,31 @@ export default function Appointment(props) {
 
   }
 
+  function onDelete() {
+    transition(DELETE)
+    props.cancelInterview(props.id).then(() => transition(EMPTY))
+  }
+
   return (
     <article className="appointment">
       <Header time={time}></Header>
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-      {mode === SHOW &&
+      {mode === SHOW && interview &&
         <Show
           student={interview.student}
           interviewer={interview.interviewer}
+          onDelete={onDelete}
         >
         </Show>
       }
-      {mode === SAVING && <Status></Status>}
       {mode === CREATE &&
         <Form
           interviewers={interviewers}
           onCancel={back}
           onSave={save}
         ></Form>}
+      {mode === SAVING && <Status></Status>}
+      {mode === DELETE && <Status></Status>}
     </article>
   )
 }
