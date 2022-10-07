@@ -27,6 +27,7 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
+  // Save function to synchronize the state between the client and the server
   function save(name, interviewer) {
     const interview = {
       student: name,

@@ -1,3 +1,5 @@
+// Custom Hook that allows us to manage the visual mode of the Appointment component.
+
 import { useState } from "react";
 
 export default function useVisualMode(initial) {

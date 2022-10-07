@@ -1,3 +1,5 @@
+// Helper functions that transforms data received from API.
+
 export function getAppointmentsForDay(state, day) {
 
   const findDays = state.days.find(findDay => findDay.name === day);

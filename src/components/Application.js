@@ -6,6 +6,7 @@ import "components/Appointment/styles.scss";
 
 import DayList from "./DayList";
 import Appointment from "./Appointment";
+
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 export default function Application() {

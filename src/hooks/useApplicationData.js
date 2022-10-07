@@ -1,6 +1,7 @@
+// Custom Hook that help us manage the Appointments.
+
 import { useState, useEffect } from "react";
 import axios from "axios";
-
 
 export default function useApplicationData() {
 
@@ -23,6 +24,7 @@ export default function useApplicationData() {
     });
   }, [])
 
+  // Helper function for updateStops.
   function spotCounter(day, appointments) {
 
     let counter = 0;
@@ -35,6 +37,7 @@ export default function useApplicationData() {
     return counter;
   }
 
+  // Function to UPDATE the stops after booking or deleting an interview.
   function updateSpots(appointments) {
 
     const days = state.days.map(day => {
@@ -48,6 +51,7 @@ export default function useApplicationData() {
 
   }
 
+  // Function to BOOK a interview.
   function bookInterview(id, interview) {
 
     const appointment = {
@@ -69,6 +73,7 @@ export default function useApplicationData() {
       });
   }
 
+  // Function to CANCEL a interview.
   function cancelInterview(id) {
 
     const appointment = {

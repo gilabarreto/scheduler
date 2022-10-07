@@ -8,13 +8,11 @@ import {
   waitForElement,
   fireEvent,
   getByText,
-  prettyDOM,
   getAllByTestId,
   getByAltText,
   getByPlaceholderText,
   queryByText,
   queryByAltText,
-  act
 } from "@testing-library/react";
 
 import Application from "components/Application";
